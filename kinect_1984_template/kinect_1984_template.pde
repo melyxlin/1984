@@ -3,16 +3,23 @@ import SimpleOpenNI.*;
 SimpleOpenNI kinect;
 PImage kinectImg;
 PImage userImg;
+PImage resizedUserImg;
+
+int appWidth = 1280;
+int appHeight = 960;
+int kinectWidth = 640;
+int kinectHeight = 480;
 
 void setup() {
-  size(640, 480);
+  size(1280, 720);
   kinect = new SimpleOpenNI(this);
   kinect.enableDepth();
   kinect.enableUser();
   fill(255, 0, 0);
   kinect.setMirror(false);
-  kinectImg = createImage(640, 480, RGB);
-  userImg = createImage(640, 480, ALPHA);
+  kinectImg = createImage(kinectWidth, kinectHeight, RGB);
+  userImg = createImage(kinectWidth, kinectHeight, ALPHA);
+  resizedUserImg = createImage(appWidth, appHeight, ALPHA);
 }
 
 void draw() {
@@ -22,17 +29,30 @@ void draw() {
   kinectImg.loadPixels();
   userImg.loadPixels();
   
-  for(int i = 0; i < kinectImg.pixels.length; i++){
-    color c = kinectImg.pixels[i];
+  //for(int i = 0; i < kinectImg.pixels.length; i++){
+  //  color c = kinectImg.pixels[i];
+  //  if(red(c) == green(c) && red(c) == blue(c) && green(c) == blue(c)){
+  //    userImg.pixels[i] = color(255);
+  //  } else {
+  //    userImg.pixels[i] = color(0);
+  //  }
+  //}
+  for(int y = 0; y < kinectHeight; y++) {
+   for(int x = 0; x < kinectWidth; x++) {
+    int index = kinectWidth * y + x;
+    color c = kinectImg.pixels[index];
     if(red(c) == green(c) && red(c) == blue(c) && green(c) == blue(c)){
-      userImg.pixels[i] = color(255);
+      userImg.pixels[index] = color(255);
     } else {
-      userImg.pixels[i] = color(0);
+      userImg.pixels[index] = color(0);
     }
+   }
   }
   kinectImg.updatePixels();
   userImg.updatePixels();
-  image(userImg, 0, 0);
+  resizedUserImg = userImg.get();
+  resizedUserImg.resize(appWidth, appHeight);
+  image(resizedUserImg, 0, 0);
   
   // Configure user list
   IntVector userList = new IntVector();

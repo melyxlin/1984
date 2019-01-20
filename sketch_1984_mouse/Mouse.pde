@@ -6,7 +6,7 @@ class Mouse {
   float maxspeed, maxforce;
   PVector pos, vel, acc;
   boolean attract;
-  PVector attractor = new PVector(width/2, height/2); /* SET TO SILHOUETTE */
+  PVector attractor = new PVector(width/2, height/2); 
   int Y_AXIS = 1;
   int X_AXIS = 2;
 
@@ -17,7 +17,7 @@ class Mouse {
     length = random(30, 50);
     weight = random(0.5, 3);
     t = random(5);
-    maxspeed = random(2, 5);
+    maxspeed = random(4, 10);
     maxforce = 0.5;
     attract = true;
   }
@@ -34,8 +34,26 @@ class Mouse {
   
   void behavior() {
    PVector attract = attract(attractor);
-   PVector mouse = new PVector(mouseX, mouseY);
-   PVector flee = flee(mouse);
+   PVector target = new PVector();
+   //if(targets.size() > 1) {
+   //  float minDist = sqrt(pow(appWidth, 2) + pow(appHeight, 2));
+   //  int minIndex = 1;
+     //for(int i = 1; i < targets.size(); i++) {
+     //  float dist = pos.dist(targets.get(i));
+     //  if(dist < minDist) {
+     //    minDist = dist;
+     //    minIndex = i;
+     //    println(minDist);
+     //  }
+     //}
+     //println(minIndex);
+     //target = targets.get(minIndex);
+   //} else {
+     //target = targets.get(0); 
+   //}
+   target.x = currTargetX;
+   target.y = currTargetY;
+   PVector flee = flee(target);
    attract.mult(2);
    flee.mult(50);
    applyForce(attract);
@@ -64,7 +82,7 @@ class Mouse {
    PVector dir = PVector.sub(target, pos);
    float dist = dir.mag();
    //println(dist);
-   if(dist < 100.0) {
+   if(dist < 200.0) {
      ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -0.5, 0.5);
      dir.setMag(maxspeed);
      dir.mult(-1);
@@ -76,6 +94,11 @@ class Mouse {
    }
   }
   
+  void setAttractor(PVector attractorPos) {
+    attractor.x = attractorPos.x;
+    attractor.y = attractorPos.y;
+  }
+  
   void display(){
     strokeWeight(weight);
     stroke(0);
@@ -84,26 +107,26 @@ class Mouse {
     // set gradient here!
     rotate(ang);
     line(0, 0, 0, length);
-    //line(0, 0, 0, int(length), color(0, 0, 0), color(255, 0, 0), 60); 
+    //drawLine(0, 0, int(length), int(length), color(0, 0, 0), color(255, 0, 0), 60); 
     fill(255, 0, 0);
     popMatrix();
   }
   
-  //void line(int x_s, int y_s, int x_e, int y_e, int col_s, int col_e, int steps) {
-  //  float[] xs = new float[steps];
-  //  float[] ys = new float[steps];
-  //  color[] cs = new color[steps];
-  //  for (int i=0; i<steps; i++) {
-  //    float amt = (float) i / steps;
-  //    xs[i] = lerp(x_s, x_e, amt) + amt * (noise(frameCount * 0.01 + amt) * 200 - 100);
-  //    ys[i] = lerp(y_s, y_e, amt) + amt * (noise(2 + frameCount * 0.01 + amt) * 200 - 100);
-  //    cs[i] = lerpColor(col_s, col_e, amt);
-  //  }
-  //  for (int i=0; i<steps-1; i++) {
-  //    stroke(cs[i]);
-  //    line(xs[i], ys[i], xs[i+1], ys[i+1]);
-  //  }
-  //}
+  void drawLine(int x_s, int y_s, int x_e, int y_e, int col_s, int col_e, int steps) {
+    float[] xs = new float[steps];
+    float[] ys = new float[steps];
+    color[] cs = new color[steps];
+    for (int i=0; i<steps; i++) {
+      float amt = (float) i / steps;
+      xs[i] = lerp(x_s, x_e, amt) + amt * (noise(frameCount * 0.01 + amt) * 200 - 100);
+      ys[i] = lerp(y_s, y_e, amt) + amt * (noise(2 + frameCount * 0.01 + amt) * 200 - 100);
+      cs[i] = lerpColor(col_s, col_e, amt);
+    }
+    for (int i=0; i<steps-1; i++) {
+      stroke(cs[i]);
+      line(xs[i], ys[i], xs[i+1], ys[i+1]);
+    }
+  }
   
   
 }
