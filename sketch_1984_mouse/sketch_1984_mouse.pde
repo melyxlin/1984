@@ -3,7 +3,6 @@ import SimpleOpenNI.*;
 SimpleOpenNI kinect;
 PImage kinectImg;
 PImage userImg;
-int currTargetX, currTargetY;
 ArrayList<PVector> targets;
 PVector attractor;
 int kinectWidth = 640;
@@ -27,9 +26,8 @@ void setup() {
   for(int i = 0; i < numMouse; i++) {
     Mouses.add(new Mouse());
   }
-  //targets = new ArrayList<PVector>();
-  currTargetX = appWidth / 2;
-  currTargetY = appHeight / 2;
+  targets = new ArrayList<PVector>();
+  targets.add(new PVector(appWidth/2, appHeight/2));
 }
 
 void draw() {
@@ -54,34 +52,29 @@ void draw() {
   
   IntVector userList = new IntVector();
   kinect.getUsers(userList);
-  //for(int i = targets.size() - 1; i >= 0; i--) {
-  //  targets.remove(i);
-  //}
-  //targets.add(new PVector(width/2, height/2));
+  for(int i = targets.size() - 1; i >= 1; i--) {
+    targets.remove(i);
+  }
+
   attractor = new PVector(width/4, height/2);
   if(userList.size() > 0) {
    int userId = userList.get(0);
    if(kinect.isTrackingSkeleton(userId)) {
      // if we detect one user we have to draw it
      drawJoint(userId, SimpleOpenNI.SKEL_LEFT_HAND);
-     //drawJoint(userId, SimpleOpenNI.SKEL_LEFT_FOOT);
-     //drawJoint(userId, SimpleOpenNI.SKEL_RIGHT_HAND);
-     //drawJoint(userId, SimpleOpenNI.SKEL_RIGHT_FOOT);
+     drawJoint(userId, SimpleOpenNI.SKEL_LEFT_FOOT);
+     drawJoint(userId, SimpleOpenNI.SKEL_RIGHT_HAND);
+     drawJoint(userId, SimpleOpenNI.SKEL_RIGHT_FOOT);
      PVector leftHand = getJointPos(userId, SimpleOpenNI.SKEL_LEFT_HAND);
-     //PVector leftFoot = getJointPos(userId, SimpleOpenNI.SKEL_LEFT_FOOT);
-     //PVector rightHand = getJointPos(userId, SimpleOpenNI.SKEL_RIGHT_HAND);
-     //PVector rightFoot = getJointPos(userId, SimpleOpenNI.SKEL_RIGHT_FOOT);
-     //if(leftHand.x != -1) targets.add(leftHand);
-     //if(leftFoot.x != -1) targets.add(leftFoot);
-     //if(rightHand.x != -1) targets.add(rightHand);
-     //if(rightFoot.x != -1) targets.add(rightFoot);
+     PVector leftFoot = getJointPos(userId, SimpleOpenNI.SKEL_LEFT_FOOT);
+     PVector rightHand = getJointPos(userId, SimpleOpenNI.SKEL_RIGHT_HAND);
+     PVector rightFoot = getJointPos(userId, SimpleOpenNI.SKEL_RIGHT_FOOT);
+     if(leftHand.x != -1) targets.add(leftHand);
+     if(leftFoot.x != -1) targets.add(leftFoot);
+     if(rightHand.x != -1) targets.add(rightHand);
+     if(rightFoot.x != -1) targets.add(rightFoot);
      attractor = getJointPos(userId, SimpleOpenNI.SKEL_HEAD);
-     currTargetX = (int)leftHand.x;
-     currTargetY = (int)leftHand.y;
-   } else {
-     currTargetX = width/2;
-     currTargetY = height/2;
-   }
+   } 
   }
   
   for(int i = 0; i < numMouse; i++) {

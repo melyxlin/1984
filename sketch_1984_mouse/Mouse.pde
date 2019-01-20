@@ -34,25 +34,20 @@ class Mouse {
   
   void behavior() {
    PVector attract = attract(attractor);
-   PVector target = new PVector();
-   //if(targets.size() > 1) {
-   //  float minDist = sqrt(pow(appWidth, 2) + pow(appHeight, 2));
-   //  int minIndex = 1;
-     //for(int i = 1; i < targets.size(); i++) {
-     //  float dist = pos.dist(targets.get(i));
-     //  if(dist < minDist) {
-     //    minDist = dist;
-     //    minIndex = i;
-     //    println(minDist);
-     //  }
-     //}
-     //println(minIndex);
-     //target = targets.get(minIndex);
-   //} else {
-     //target = targets.get(0); 
-   //}
-   target.x = currTargetX;
-   target.y = currTargetY;
+   PVector target = targets.get(0);
+   if(targets.size() > 1) {
+     float minDist = 3000;
+     int minIndex = 1;
+     for(int i = 1; i < targets.size(); i++) {
+       float dist = pos.dist(targets.get(i));
+       if(dist < minDist) {
+         minDist = dist;
+         minIndex = i;
+       }
+     }
+     target.x = int(targets.get(minIndex).x);
+     target.y = int(targets.get(minIndex).y);
+   }
    PVector flee = flee(target);
    attract.mult(2);
    flee.mult(50);
