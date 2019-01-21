@@ -4,13 +4,13 @@ class Mouse {
   float ang;
   float t;
   float maxspeed, maxforce;
+  int maxsteps;
   PVector pos, vel, acc;
   boolean attract;
   PVector attractor = new PVector(width/2, height/2); 
-  int Y_AXIS = 1;
-  int X_AXIS = 2;
+  int id;
 
-  Mouse() {
+  Mouse(int _id) {
     pos = new PVector(random(10, width-10), random(10, height-10));
     vel = PVector.random2D();
     acc = new PVector(0, 0);
@@ -19,7 +19,9 @@ class Mouse {
     t = random(5);
     maxspeed = random(4, 10);
     maxforce = 0.5;
+    maxsteps = int(random(8, 20));
     attract = true;
+    id = _id;
   }
   
   void update(){
@@ -63,7 +65,7 @@ class Mouse {
     PVector dir = PVector.sub(target, pos);
     float dist = dir.mag();
     float speed = maxspeed;
-    if(dist < 300.0) {
+    if(dist < 200.0) {
       ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -0.5, 0.5);
       speed = map(dist, 0, 300, 0, maxspeed); 
     }
@@ -77,7 +79,7 @@ class Mouse {
    PVector dir = PVector.sub(target, pos);
    float dist = dir.mag();
    //println(dist);
-   if(dist < 200.0) {
+   if(dist < 100.0) {
      ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -0.5, 0.5);
      dir.setMag(maxspeed);
      dir.mult(-1);
@@ -95,14 +97,20 @@ class Mouse {
   }
   
   void display(){
+    PVector dir = PVector.sub(attractor, pos);
+    float dist = dir.mag();
     strokeWeight(weight);
     stroke(0);
     pushMatrix();
     translate(pos.x, pos.y);
-    // set gradient here!
     rotate(ang);
-    line(0, 0, 0, length);
-    //drawLine(0, 0, int(length), int(length), color(0, 0, 0), color(255, 0, 0), 60); 
+    //if(dist > 100.0) line(0, 0, 0, length);
+    //else drawLine(0, 0, 0, int(length), color(255, 0, 0), color(0, 0, 0), 5); 
+    //line(0, 0, 0, length);
+    int steps = int(map(dist, 200, 50, maxsteps, 3));
+    steps = int(constrain(steps, 3, maxsteps));
+    if(dist > 200.0) line(0, 0, 0, length);
+    else drawLine(0, 0, 0, int(length), color(255, 0, 0), color(0, 0, 0), steps); 
     fill(255, 0, 0);
     popMatrix();
   }
@@ -113,8 +121,10 @@ class Mouse {
     color[] cs = new color[steps];
     for (int i=0; i<steps; i++) {
       float amt = (float) i / steps;
-      xs[i] = lerp(x_s, x_e, amt) + amt * (noise(frameCount * 0.01 + amt) * 200 - 100);
-      ys[i] = lerp(y_s, y_e, amt) + amt * (noise(2 + frameCount * 0.01 + amt) * 200 - 100);
+      xs[i] = lerp(x_s, x_e, amt) + amt * (noise(frameCount * 0.01 + amt + id) * 200 - 100);
+      ys[i] = lerp(y_s, y_e, amt) + amt * (noise(2 + frameCount * 0.01 + amt + id) * 200 - 100);
+      //xs[i] = lerp(x_s, x_e, amt);
+      //ys[i] = lerp(y_s, y_e, amt);
       cs[i] = lerpColor(col_s, col_e, amt);
     }
     for (int i=0; i<steps-1; i++) {
