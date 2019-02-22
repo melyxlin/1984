@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "TextWithGibberish.hpp"
+#include "KinectOSCReceiver.hpp"
 #include "Blob.hpp"
 
 #define WIDTH 1280
@@ -17,9 +18,15 @@ public:
 
 	int number_of_targets;
     int num_of_circles_per_target;
+    int msgIter;
 	vector<glm::vec2> targets;
     vector<Blob> msgBlobs;
 	ofShader shader;
+    ofVideoPlayer vid;
     
-    TextWithGibberish text;
+    // swirl operation
+    ofImage screenImg;
+    bool swirlOn;
+    
+    KinectOSCReceiver receiver;
 };

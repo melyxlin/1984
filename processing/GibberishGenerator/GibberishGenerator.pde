@@ -1,66 +1,84 @@
-String lines [] = {"times 17.3.84 bb speech malreported africa rectify",
-                        "times 19.12.83 forecasts 3 yp 4th quarter 83 misprints verify current issue",
-                        "times 14.2.84 miniplenty malquoted chocolate rectify",
-                        "times three period twelve period eighty-three reporting bb day order"
-    };
-
-String str = lines[0];
-String secondStr = lines[1];
-boolean random;
+String lines[];
+String gibberish[];
+boolean randoms[];
+PFont font;
 int start;
 int interval;
+int margin;
 
 void setup() {
-  size(600, 600);
-  textSize(20);
-  random = false;
+  size(1280, 720);
+  //fullScreen();
+  pixelDensity(2);
+  font = createFont("Inconsolata-Regular.ttf", 24);
+  textFont(font);
+  textSize(24);
   interval = 1000;
+  margin = 20;
+  lines = loadStrings("lines.txt");
+  gibberish = new String[lines.length];
+  randoms = new boolean[lines.length];
+  for(int i = 0; i < gibberish.length; i++) {
+    gibberish[i] = lines[i]; 
+    randoms[i] = false;
+  }
 }
 
 void draw() {
-  background(150);
+  background(255);
   fill(0);
   
-  // randomizing string content
-  if(random) {
-    if(millis() < (start + interval)) {
-      int index = int(random(0, str.length()));
-      if(random(1) < 0.1) {
-        str = str.substring(0, index) + char(int(random(33, 126))) + str.substring(index+1, str.length());
-      } 
-    } else {
-      int index = int(random(0, str.length()));
-      if(random(1) < 0.6) {
-        str = str.substring(0, index) + secondStr.charAt(index) + str.substring(index+1, str.length());
+  
+  for(int i = 0; i < lines.length; i++) {
+    String str = lines[i];
+    if(randoms[i]) {
+      if(millis() < (start + interval) ) {
+        int index = int(random(0, str.length()));
+        if(random(1) < 0.4) {
+          gibberish[i] = gibberish[i].substring(0, index) + char(int(random(33, 126))) + gibberish[i].substring(index+1, str.length());
+        }
+      } else {
+        int index = int(random(0, str.length()));
+        if(random(1) < 0.8) {
+          gibberish[i] = gibberish[i].substring(0, index) + str.charAt(index) + gibberish[i].substring(index+1, str.length());
+        }
       }
-    }
-  } 
-  
-  // transitioning into next text
-  
-  
-  // drawing text char by char
-  int heightCounter = 20;
-  int widthCounter = 0;
-  for(int i = 0; i < str.length(); i++){
-    text(str.charAt(i), widthCounter*20, heightCounter);
-    if(widthCounter*20 > width) {
-      widthCounter=0;
-      heightCounter += 20;
-    } else {
-      widthCounter++;
     }
   }
   
-  text(int(frameRate), width-40, 20);
+  
+  // drawing text char by char
+  //int heightCounter = 20;
+  //int widthCounter = 0;
+  for(int j = 0; j < gibberish.length; j++) {
+    int heightCounter = 20;
+    int widthCounter = 0;
+    for(int i = 0; i < gibberish[j].length(); i++){
+      int linespacing = j*40;
+      //int linespacing = 0;
+      text(gibberish[j].charAt(i), widthCounter*20+margin, linespacing + heightCounter+margin);
+      if(widthCounter*20+margin*2 > width) {
+        widthCounter=0;
+        heightCounter += 20;
+      } else {
+        widthCounter++;
+      }
+    }
+  }
+  
+  //saveFrame("frames/####.png");
+  //text(int(frameRate), width-40, 20);
 }
 
 void keyPressed() {
-  random = true;
+  for(int i = 0; i < lines.length; i++) {
+    randoms[i] = random(1) < 0.5 ? true : false; 
+  }
   start = millis();
 }
 
 void mousePressed() {
-  random = false;
-  str = lines[0];
+  for(int i = 0; i < lines.length; i++) {
+    randoms[i] = false; 
+  }
 }

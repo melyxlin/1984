@@ -6,25 +6,47 @@ void ofApp::setup() {
 	ofSetFrameRate(60);
 	ofSetWindowTitle("openframeworks");
 
-	number_of_targets = 72;
-    num_of_circles_per_target = 8;
+	number_of_targets = 180;
+    num_of_circles_per_target = 6;
 	for (int i = 0; i < number_of_targets; i++) {
 		this->targets.push_back(glm::vec2());
 	}
     
+    msgIter = 0;
     for (int i = 0; i < number_of_targets/num_of_circles_per_target; i++) {
         Blob b;
         b.setup();
+        b.numCircles = num_of_circles_per_target;
         msgBlobs.push_back(b);
     }
     
 	this->shader.load("shader/shader.vert", "shader/shader.frag");
-    text.setup();
+    vid.load("text.mp4");
+    vid.play();
+    
+    receiver.setup();
 }
 //--------------------------------------------------------------
 void ofApp::update() {
 
-    text.update();
+    vid.update();
+    float triggerPos = receiver.update();
+    
+    if(triggerPos >= 0){
+        float blobPos = triggerPos;
+        bool dir = false;
+        if(triggerPos > WIDTH/2) {
+            blobPos = abs(triggerPos - WIDTH);
+            dir = true;
+        }
+        if(msgIter < number_of_targets/num_of_circles_per_target) {
+            msgBlobs[msgIter].init(blobPos, dir);
+            printf("start xpos: %f, end: (%f, %f)\n", blobPos, msgBlobs[msgIter].end.x, msgBlobs[msgIter].end.y);
+            msgIter++;
+        } else {
+            msgIter = 0;
+        }
+    }
     
     for(int i = 0; i < msgBlobs.size(); i++) {
         Blob b = msgBlobs[i];
@@ -36,9 +58,7 @@ void ofApp::update() {
             y = int(pos.y);
             this->targets[i*num_of_circles_per_target+j] = glm::vec2(x, y);
         }
-//        printf("%d %d, ", i, b.state);
     }
-//    printf("\n");
 }
 
 //--------------------------------------------------------------
@@ -46,38 +66,41 @@ void ofApp::draw() {
     this->shader.begin();
     this->shader.setUniform1f("time", ofGetElapsedTimef());
     this->shader.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
+    this->shader.setUniformTexture("tex0", vid.getTexture(), 1);
     this->shader.setUniform2fv("targets", &this->targets[0].x, this->number_of_targets);
+    ofBackground(0);
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    vid.draw(0, 0, ofGetWidth(), ofGetHeight());
     this->shader.end();
-    
-    text.draw();
     ofDrawBitmapString(ofToString((int)ofGetFrameRate()), 700, 700);
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
-    
+    if(vid.isPlaying()) vid.stop();
+    else vid.play();
 }
 
 void ofApp::keyPressed(int key) {
-    text.randomBool = true;
-    text.randomStart = ofGetElapsedTimef();
-    if(key == '0') {
-        msgBlobs[0].init(1, false);
-    } else if (key == '1') {
-        msgBlobs[1].init(100, false);
-    } else if (key == '2') {
-        msgBlobs[2].init(WIDTH/2, false);
-    } else if (key == '3') {
-        msgBlobs[3].init(500, false);
-    } else if (key == '4') {
-        msgBlobs[4].init(100, false);
-    } else if (key == '5') {
-        msgBlobs[5].init(WIDTH/2, true);
-    } else if (key == '6') {
-        msgBlobs[6].init(1, true);
-    } else if (key == '7') {
-        msgBlobs[7].init(150, true);
-    } else if (key == '8') {
-        msgBlobs[8].init(500, true);
+    
+    if(key == 'r') {
+        // reset
+        for(int i = 0; i < msgBlobs.size(); i++) {
+            msgBlobs[i].setup();
+        }
+    } else if (key == 't') {
+        ofToggleFullscreen();
+    } else if (key == 'x') {
+        screenImg.grabScreen(0, 0, WIDTH, HEIGHT);
+        screenImg.save("screen.png");
+    } else {
+        if(msgIter < number_of_targets/num_of_circles_per_target) {
+            float xpos = ofRandom(1, WIDTH/2);
+            float dir = ofRandom(1) < 0.5 ? true : false;
+            msgBlobs[msgIter].init(xpos, dir);
+            printf("start xpos: %f, end: (%f, %f)\n", xpos, msgBlobs[msgIter].end.x, msgBlobs[msgIter].end.y);
+            msgIter++;
+        } else {
+            msgIter = 0;
+        }
     }
 }

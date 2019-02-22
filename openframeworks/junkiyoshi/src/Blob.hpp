@@ -30,6 +30,11 @@ public:
     float interpolationStartTime;
     float interpolationFrameInterval;
     float jitterSpeed;
+    float moveSpeed;
+    float indexIncrement;
+    
+    float xstep = 80.0;
+    float ystep = 40.0;
 };
 
 #endif /* Blob_hpp */
