@@ -50,7 +50,7 @@ void ofApp::update() {
     
     // aura update
     for(int i = 0; i < numAuras; i++) {
-        auras[i].update(0.1, 0.005);
+        auras[i].update();
     }
     
     // msg blobs update
@@ -103,60 +103,85 @@ void ofApp::keyPressed(int key) {
     if(key == '0') {
         msgBlobs[0].init(actors[0].x > WIDTH/2 ? abs(actors[0].x - WIDTH) : actors[0].x, actors[0].y, actors[0].x > WIDTH/2 ? true : false);
         auras[0].triggered = true;
+        
     } else if (key == '1') {
         msgBlobs[1].init(actors[1].x > WIDTH/2 ? abs(actors[1].x - WIDTH) : actors[1].x, actors[1].y, actors[1].x > WIDTH/2 ? true : false);
         auras[1].triggered = true;
+        
     } else if (key == '2') {
         msgBlobs[2].init(actors[2].x > WIDTH/2 ? abs(actors[2].x - WIDTH) : actors[2].x, actors[2].y, actors[2].x > WIDTH/2 ? true : false);
         auras[2].triggered = true;
+        
     } else if (key == '3') {
         msgBlobs[3].init(actors[3].x > WIDTH/2 ? abs(actors[3].x - WIDTH) : actors[3].x, actors[3].y, actors[3].x > WIDTH/2 ? true : false);
         auras[3].triggered = true;
+        
     } else if (key == '4') {
         msgBlobs[4].init(actors[4].x > WIDTH/2 ? abs(actors[4].x - WIDTH) : actors[4].x, actors[4].y, actors[4].x > WIDTH/2 ? true : false);
         auras[4].triggered = true;
+        
     } else if (key == '5') {
         msgBlobs[5].init(actors[5].x > WIDTH/2 ? abs(actors[5].x - WIDTH) : actors[5].x, actors[5].y, actors[5].x > WIDTH/2 ? true : false);
         auras[5].triggered = true;
+        
     } else if (key == '6') {
         msgBlobs[6].init(actors[6].x > WIDTH/2 ? abs(actors[6].x - WIDTH) : actors[6].x, actors[6].y, actors[6].x > WIDTH/2 ? true : false);
         auras[5].triggered = true;
+        
     } else if (key == 'e') {
+        // end of work scene 1: all blobs go to obrien
         for(int i = 0; i < number_of_targets/num_of_circles_per_target; i++) {
             msgBlobs[i].init(actors[i].x > WIDTH/2 ? abs(actors[i].x - WIDTH) : actors[i].x, actors[i].y, false);
             msgBlobs[i].setEnd(ofVec2f(1100, ofRandom(HEIGHT/5 - 50, HEIGHT/5 + 50)));
             msgBlobs[i].setJitter(0.01, 20, 20);
-            if(i != 6) auras[i].triggered = true;
+            if(i != 6) {
+                auras[i].triggered = true;
+                auras[i].disappear = true;
+            }
         }
         
+    } else if (key == 'c') {
+        // slow motion of work scene 2: blobs go to center of screen slowly
+        
     } else if (key == OF_KEY_LEFT) {
-        auras[0].triggered = true;
-        auras[1].triggered = true;
-        auras[2].triggered = true;
+        auras[0].glowing = true;
+        auras[1].glowing = true;
+        auras[2].glowing = true;
+        
     } else if (key == OF_KEY_DOWN) {
-        auras[3].triggered = true;
+        auras[3].glowing = true;
+        
     } else if (key == OF_KEY_UP) {
-        auras[4].triggered = true;
+        auras[4].glowing = true;
+        
     } else if (key == OF_KEY_RIGHT) {
-        auras[5].triggered = true;
+        auras[5].glowing = true;
+        
     } else if(key == 'r') {
         // reset
         msgIter = 0;
         for(int i = 0; i < msgBlobs.size(); i++) {
             msgBlobs[i].setup(actors[i].x, actors[i].y);
         }
+        for(int i = 0; i < numAuras; i++) {
+            auras[i].setup(actors[i].x, actors[i].y, 140, i);
+        }
+        
     } else if (key == 't') {
         // full screen
         ofToggleFullscreen();
+        
     } else if (key == 'x') {
         // grab screen shot
         screenImg.grabScreen(0, 0, WIDTH, HEIGHT/2);
         screenImg.save("screen.png");
+        
     } else if (key == 's') {
         swirlOn = 1.0 - swirlOn;
         screenImg.load("screen.png");
 //        screenImg.grabScreen(0, 0, WIDTH, HEIGHT/2);
 //        screenTexture.loadScreenData(0, 0, WIDTH, HEIGHT/2);
+        
     } else {
         // add and init blob
         if(msgIter < number_of_targets/num_of_circles_per_target) {
@@ -169,6 +194,7 @@ void ofApp::keyPressed(int key) {
         } else {
             msgIter = 0;
         }
+        
     }
 }
 

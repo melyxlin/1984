@@ -15,7 +15,7 @@
 class Aura {
 public:
     void setup(int x_, int y_, float r_, int id_);
-    void update(float noiseZ, float noiseXY);
+    void update();
     void draw();
     ofPoint make_rect_point(float len, int deg, int z = 0);
     
@@ -27,8 +27,12 @@ public:
     int y;
     float radius;
     bool triggered;
+    bool glowing;
+    bool disappear;
     int triggerTime;
     int triggerColor;
+    float noiseZ;
+    float noiseXY;
 };
 
 

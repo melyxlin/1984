@@ -13,11 +13,13 @@ void Aura::setup(int x_, int y_, float r_, int id_) {
     radius = r_;
     id = id_;
     triggered = false;
+    glowing = false;
+    disappear = false;
     triggerTime = -1;
     triggerColor = 0;
 }
 
-void Aura::update(float noiseZ, float noiseXY) {
+void Aura::update() {
     if(triggered) {
         if(triggerTime == -1) {
             triggerTime = ofGetFrameNum();
@@ -31,10 +33,15 @@ void Aura::update(float noiseZ, float noiseXY) {
             triggerColor = 0;
         }
     }
-    noiseZ = triggered ? 0.1 : 0.005;
-    noiseXY = triggered ? 0.005 : 0.003;
     
-//    prevpath = path;
+    if(glowing) {
+        triggerColor = 255;
+        if(disappear || triggered) glowing = false;
+    }
+    
+    noiseZ = triggered || glowing ? 0.1 : 0.005;
+    noiseXY = triggered || glowing ? 0.005 : 0.003;
+    
     path.clear();
     for (int deg = 0; deg < 360; deg += 5) {
         ofPoint noise_point = ofPoint(radius * cos(deg * DEG_TO_RAD) + x, radius * sin(deg * DEG_TO_RAD) + y);
@@ -53,14 +60,16 @@ void Aura::update(float noiseZ, float noiseXY) {
 void Aura::draw() {
     ofPushMatrix();
     ofTranslate(x, y);
-//    prevpath.setFilled(false);
-//    prevpath.setStrokeColor(ofColor(200));
-//    prevpath.setStrokeWidth(3);
-//    prevpath.draw();
-    if(triggered) path.setFilled(true);
-    else path.setFilled(false);
-    path.setFillColor(ofColor(triggerColor));
-    path.setStrokeColor(ofColor(255));
+    if(triggered || glowing) {
+        path.setFilled(true);
+        path.setFillColor(ofColor(triggerColor));
+    }
+    else {
+        path.setFilled(false);
+    }
+    
+    if(disappear) path.setStrokeColor(ofColor(triggerColor));
+    else path.setStrokeColor(ofColor(255));
     path.setStrokeWidth(2);
     path.draw();
     ofPopMatrix();
