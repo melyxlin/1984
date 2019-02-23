@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/LightRoom.unity
+  isLoaded: 1
+  isActive: 1

@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Actuate.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Actuate.cs" Line="20" Column="10" />
+      <File FileName="Assets/CubeControl.cs" Line="10" Column="8" />
+      <File FileName="Assets/Scripts/Oscillate.cs" Line="19" Column="3" />
+      <File FileName="Assets/Scripts/Perlin.cs" Line="170" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
