@@ -11,12 +11,17 @@
 #include <stdio.h>
 #include "ofMain.h"
 
+#define WIDTH 1200
+#define HEIGHT 1080
+
 class Blob {
 public:
-    void setup();
-    void init(float xPos, bool isLeft);
+    void setup(float xPos, float yPos);
+    void init(float xPos, float yPos, bool isLeft);
     void update();
     ofVec2f getPos(int index);
+    void setEnd(ofVec2f pos);
+    void setJitter(float speed, float stepX, float stepY);
     bool isEndOfPath(ofVec2f pos);
     
     ofVec2f start;
@@ -32,9 +37,8 @@ public:
     float jitterSpeed;
     float moveSpeed;
     float indexIncrement;
-    
-    float xstep = 80.0;
-    float ystep = 40.0;
+    float xstep;
+    float ystep;
 };
 
 #endif /* Blob_hpp */

@@ -7,38 +7,38 @@
 
 #include "Blob.hpp"
 
-void Blob::setup() {
-    start.x = 0;
-    start.y = float(ofGetWindowHeight() + 80.0);
+void Blob::setup(float xPos, float yPos) {
+    start.x = xPos;
+    start.y = yPos;
     currPos = start;
-    end.x = ofGetWindowWidth();
+    end.x = WIDTH;
     end.y = 0;
     state = 0;
     interpolationFrameInterval = 60.0;
-    moveSpeed = 20.0;
-    indexIncrement = 0.2;
+    moveSpeed = 0.0;
 }
 
-void Blob::init(float xPos, bool isLeft) {
+void Blob::init(float xPos, float yPos, bool isLeft) {
     dir = isLeft;
     state = 1;
     initTime = ofGetFrameNum();
     start.x = xPos;
-    start.y = float(ofGetWindowHeight() + 200.0);
-    end.x = ofRandom(xPos+400, ofGetWindowWidth());
-    end.y = ofRandom(20, ofGetWindowHeight()*0.9);
+    start.y = yPos;
+    end.x = ofRandom(xPos+200, WIDTH-200);
+    end.y = ofRandom(80, HEIGHT/4);
     currPos = start;
     jitterSpeed = ofMap(ofGetFrameRate(), 0, 60, 0.1, 0.05);
+    xstep = 100.0;
+    ystep = 30.0;
     xseed = ofRandom(100);
     yseed = ofRandom(100);
 }
 
 void Blob::update() {
     if(state == 1 || state == 2) {
-        moveSpeed = ofMap(ofGetFrameRate(), 0, 40, 80, 30);
-        indexIncrement = 0.2;
-    } else {
-        indexIncrement = 1.0;
+//        moveSpeed = ofMap(ofGetFrameRate(), 0, 60, 80, 30);
+        moveSpeed = 30;
+        indexIncrement = 0.8;
     }
     if(state == 1 && isEndOfPath(getPos(0))) {
         state = 2;
@@ -51,27 +51,27 @@ void Blob::update() {
 ofVec2f Blob::getPos(int index) {
     ofVec2f pos;
     if(state == 0) {
-        pos = start;
+        pos = ofVec2f(-100, -100);
     } else if (state == 1) {
-        float time = moveSpeed*(ofGetFrameNum() - initTime - index * indexIncrement);
+        float time = start.x + moveSpeed*(ofGetFrameNum() - initTime - index * indexIncrement);
         float b = pow(end.y / start.y, 1.0/(end.x - start.x));
         float a = end.y / pow(b, end.x);
         pos.x = time;
         pos.y = a * pow(b, time);
-        if(dir) pos.x = ofGetWindowWidth() - time;
+        if(dir) pos.x = WIDTH - time;
     } else if (state == 2) {
-        float time = moveSpeed*(ofGetFrameNum() - initTime - index * indexIncrement);
+        float time = start.x + moveSpeed*(ofGetFrameNum() - initTime - index * indexIncrement);
         float b = pow(end.y / start.y, 1.0/(end.x - start.x));
         float a = end.y / pow(b, end.x);
         pos.x = time;
         pos.y = a * pow(b, time);
-        if(dir) pos.x = ofGetWindowWidth() - time;
+        if(dir) pos.x = WIDTH - time;
         if(isEndOfPath(pos)) {
             if(!dir) {
                 pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.x - xstep, end.x + xstep);
                 pos.y = ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.y - ystep, end.y + ystep);
             } else {
-                pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, ofGetWindowWidth() - end.x - xstep, ofGetWindowWidth() - end.x + xstep);
+                pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, WIDTH - end.x - xstep, WIDTH - end.x + xstep);
                 pos.y = ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.y - ystep, end.y + ystep);
             }
         }
@@ -82,11 +82,21 @@ ofVec2f Blob::getPos(int index) {
             pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.x - xstep, end.x + xstep);
             pos.y = ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.y - ystep, end.y + ystep);
         } else {
-            pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, ofGetWindowWidth() - end.x - xstep, ofGetWindowWidth() - end.x + xstep);
+            pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, WIDTH - end.x - xstep, WIDTH - end.x + xstep);
             pos.y = ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.y - ystep, end.y + ystep);
         }
     }
     return pos;
+}
+
+void Blob::setEnd(ofVec2f pos) {
+    end = pos;
+}
+
+void Blob::setJitter(float speed, float stepX, float stepY) {
+    jitterSpeed = speed;
+    xstep = stepX;
+    ystep = stepY;
 }
 
 bool Blob::isEndOfPath(ofVec2f pos) {

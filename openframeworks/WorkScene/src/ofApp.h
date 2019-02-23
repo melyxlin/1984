@@ -1,9 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "Blob.hpp"
-
-#define WIDTH 1280
-#define HEIGHT 720
+#include "Aura.hpp"
 
 class ofApp : public ofBaseApp {
     
@@ -23,9 +21,15 @@ public:
     ofVideoPlayer vid;
     
     // swirl operation
+    ofTexture screenTexture;
     ofImage screenImg;
-    bool swirlOn;
+    float swirlOn;
     
 //    KinectOSCReceiver receiver;
+    
+    // wall variables
+    ofPoint actors[7];
+    Aura auras[6];
+    int numAuras = 6;
 };
 

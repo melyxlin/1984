@@ -7,7 +7,7 @@ int interval;
 int margin;
 
 void setup() {
-  size(1280, 720);
+  size(1200, 540);
   //fullScreen();
   pixelDensity(2);
   font = createFont("Inconsolata-Regular.ttf", 24);
