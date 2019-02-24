@@ -24,8 +24,8 @@ void Blob::init(float xPos, float yPos, bool isLeft) {
     initTime = ofGetFrameNum();
     start.x = xPos;
     start.y = yPos;
-    end.x = ofRandom(xPos+200, WIDTH-200);
-    end.y = ofRandom(80, HEIGHT/4);
+    end.x = ofRandom(xPos+100, WIDTH-100);
+    end.y = ofRandom(100, HEIGHT/4);
     currPos = start;
     jitterSpeed = ofMap(ofGetFrameRate(), 0, 60, 0.1, 0.05);
     xstep = 100.0;
