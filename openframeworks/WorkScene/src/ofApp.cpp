@@ -25,9 +25,6 @@ void ofApp::setup() {
     for (int i = 0; i < number_of_targets; i++) {
         this->targets.push_back(glm::vec2());
     }
-    screenTexture.allocate(WIDTH, HEIGHT/2, GL_RGBA);
-//    screenImg.load("screen.png");
-    swirlOn = 0.0;
     
     // blob class config
     msgIter = 0;
@@ -42,11 +39,13 @@ void ofApp::setup() {
     // background vid config
     vid.load("text.mov");
     vid.play();
+    vidTexture.allocate(WIDTH, HEIGHT/2, GL_LUMINANCE);
 }
 //--------------------------------------------------------------
 void ofApp::update() {
     
     vid.update();
+    vidTexture = vid.getTexture();
     
     // aura update
     for(int i = 0; i < numAuras; i++) {
@@ -69,19 +68,15 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    // draw msg blobs
+    // draw msg blobs for regular shader
     this->shader.begin();
     this->shader.setUniform1f("time", ofGetElapsedTimef());
     this->shader.setUniform2f("resolution", WIDTH, HEIGHT);
-    this->shader.setUniformTexture("tex0", vid.getTexture(), 1);
-    this->shader.setUniform1f("swirl", swirlOn);
-    this->shader.setUniformTexture("screen", screenImg.getTexture(), 2);
+    this->shader.setUniformTexture("tex0", vidTexture, 1);
     this->shader.setUniform2fv("targets", &this->targets[0].x, this->number_of_targets);
     ofBackground(0);
     ofDrawRectangle(0, 0, WIDTH, HEIGHT);
-    if(swirlOn == 1.0) screenImg.draw(0, 0, WIDTH, HEIGHT/2);
-    else vid.draw(0, 0, WIDTH, HEIGHT/2);
-    
+    vid.draw(0, 0, WIDTH, HEIGHT/2);
     this->shader.end();
     
     // draw auras
@@ -140,8 +135,10 @@ void ofApp::keyPressed(int key) {
             }
         }
         
-    } else if (key == 'c') {
-        // slow motion of work scene 2: blobs go to center of screen slowly
+    } else if (key == OF_KEY_RETURN) {
+        // goes to frame with news article
+        vid.setPosition(0.32);
+        vid.play();
         
     } else if (key == OF_KEY_LEFT) {
         auras[0].glowing = true;
@@ -171,30 +168,28 @@ void ofApp::keyPressed(int key) {
         // full screen
         ofToggleFullscreen();
         
-    } else if (key == 'x') {
-        // grab screen shot
-        screenImg.grabScreen(0, 0, WIDTH, HEIGHT/2);
-        screenImg.save("screen.png");
-        
     } else if (key == 's') {
-        swirlOn = 1.0 - swirlOn;
-        screenImg.load("screen.png");
-//        screenImg.grabScreen(0, 0, WIDTH, HEIGHT/2);
-//        screenTexture.loadScreenData(0, 0, WIDTH, HEIGHT/2);
         
+        swirlOn = true;
+
     } else {
         // add and init blob
-        if(msgIter < number_of_targets/num_of_circles_per_target) {
-            float dir = actors[msgIter].x > WIDTH/2 ? true : false;
-            float xpos = actors[msgIter].x > WIDTH/2 ? abs(actors[msgIter].x - WIDTH) : actors[msgIter].x;
-            msgBlobs[msgIter].init(xpos, actors[msgIter].y, dir);
-            auras[msgIter].triggered = true;
-            printf("end: (%f, %f)\n", msgBlobs[msgIter].end.x, msgBlobs[msgIter].end.y);
-            msgIter++;
-        } else {
-            msgIter = 0;
-        }
+//        if(msgIter < number_of_targets/num_of_circles_per_target) {
+//            float dir = actors[msgIter].x > WIDTH/2 ? true : false;
+//            float xpos = actors[msgIter].x > WIDTH/2 ? abs(actors[msgIter].x - WIDTH) : actors[msgIter].x;
+//            msgBlobs[msgIter].init(xpos, actors[msgIter].y, dir);
+//            auras[msgIter].triggered = true;
+//            printf("end: (%f, %f)\n", msgBlobs[msgIter].end.x, msgBlobs[msgIter].end.y);
+//            msgIter++;
+//        } else {
+//            msgIter = 0;
+//        }
         
     }
 }
 
+void ofApp::keyReleased(int key) {
+    if(key == 's') {
+        swirlOn = false;
+    }
+}

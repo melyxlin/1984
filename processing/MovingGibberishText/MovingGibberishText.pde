@@ -6,7 +6,7 @@ int lineIt;
 int charIt;
 
 void setup() {
-  size(1200, 540);
+  size(1778, 800);
   pixelDensity(2);
   background(255);
   fill(0);
