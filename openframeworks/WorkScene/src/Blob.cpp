@@ -1,6 +1,6 @@
 //
 //  Blob.cpp
-//  junkiyoshi
+//  WorkScene
 //
 //  Created by Lo Wing Ellen on 2/11/19.
 //
@@ -16,12 +16,16 @@ void Blob::setup(float xPos, float yPos) {
     state = 0;
     interpolationFrameInterval = 60.0;
     moveSpeed = 0.0;
+    swirlTime = -1;
+    swirlSpeed = 6;
+    swirlCenter = ofVec2f(WIDTH/2, HEIGHT/6);
 }
 
 void Blob::init(float xPos, float yPos, bool isLeft) {
     dir = isLeft;
     state = 1;
     initTime = ofGetFrameNum();
+    swirlTime = -1;
     start.x = xPos;
     start.y = yPos;
     end.x = ofRandom(xPos+100, WIDTH-100);
@@ -32,6 +36,7 @@ void Blob::init(float xPos, float yPos, bool isLeft) {
     ystep = 30.0;
     xseed = ofRandom(100);
     yseed = ofRandom(100);
+    swirlCenter = ofVec2f(WIDTH/2, HEIGHT/6);
 }
 
 void Blob::update() {
@@ -45,6 +50,14 @@ void Blob::update() {
         interpolationStartTime = ofGetFrameNum();
     } else if( state == 2 && ofGetFrameNum() > (interpolationStartTime + interpolationFrameInterval) ) {
         state = 3;
+    } else if( state == 4 ) {
+        if(swirlTime == -1) swirlTime = ofGetFrameNum();
+        else if(ofGetFrameNum() > swirlTime + 20) state = 5;
+    } else if( state == 5 ){
+        start.x = WIDTH/2;
+        start.y = HEIGHT/6;
+    } else if (state == 5 && isEndOfPath(getPos(0))) {
+        state = 0;
     }
 }
 
@@ -85,6 +98,18 @@ ofVec2f Blob::getPos(int index) {
             pos.x = ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, WIDTH - end.x - xstep, WIDTH - end.x + xstep);
             pos.y = ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, end.y - ystep, end.y + ystep);
         }
+    } else if (state == 4) {
+        // swirl
+        float time = start.x + swirlSpeed*(ofGetFrameNum() - swirlTime - index * indexIncrement * 0.001);
+        float x = (WIDTH/2*0.9-(ofGetFrameNum() - swirlTime)*25) > 0 ? (WIDTH/2*0.9-(ofGetFrameNum() - swirlTime)*25) * cos(time) + swirlCenter.x : swirlCenter.x;
+        float y = (HEIGHT/6*0.9-(ofGetFrameNum() - swirlTime)*25) > 0 ? (HEIGHT/6*0.9-(ofGetFrameNum() - swirlTime)*25) * sin(time) + swirlCenter.y : swirlCenter.y;
+        pos.x = x + ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -xstep, xstep);
+        pos.y = y + ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
+    } else if (state == 5) {
+        // scatter
+        float time = (ofGetFrameNum() - swirlTime - 20) / 5;
+        pos.x = start.x * (1.0 - time) + end.x * time + 2 * ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -xstep, xstep);
+        pos.y = start.y * (1.0 - time) + end.y * time + 2 * ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
     }
     return pos;
 }

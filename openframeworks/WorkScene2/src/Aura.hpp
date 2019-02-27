@@ -17,7 +17,6 @@ public:
     void setup(int x_, int y_, float r_, int id_);
     void update();
     void draw();
-    void setPos(ofVec2f pos);
     ofPoint make_rect_point(float len, int deg, int z = 0);
     
     ofPolyline poly;

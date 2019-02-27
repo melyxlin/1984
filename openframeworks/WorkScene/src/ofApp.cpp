@@ -84,7 +84,7 @@ void ofApp::draw() {
         auras[i].draw();
     }
 
-    ofDrawBitmapString(ofToString((int)ofGetFrameRate()), WIDTH-20, 20);
+//    ofDrawBitmapString(ofToString((int)ofGetFrameRate()), WIDTH-20, 20);
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
@@ -168,9 +168,13 @@ void ofApp::keyPressed(int key) {
         // full screen
         ofToggleFullscreen();
         
-    } else if (key == 's') {
-        
+    } else if (key == 's' || key == 'w') {
         swirlOn = true;
+        for(int i = 0; i < msgBlobs.size(); i++) {
+            if(key == 'w') msgBlobs[i].swirlCenter = ofVec2f(1100, HEIGHT/5);
+            msgBlobs[i].state = 4;
+            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), -100));
+        }
 
     } else {
         // add and init blob

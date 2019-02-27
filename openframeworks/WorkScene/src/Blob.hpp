@@ -34,11 +34,14 @@ public:
     float initTime;
     float interpolationStartTime;
     float interpolationFrameInterval;
+    float swirlTime;
     float jitterSpeed;
     float moveSpeed;
+    float swirlSpeed;
     float indexIncrement;
     float xstep;
     float ystep;
+    ofVec2f swirlCenter;
 };
 
 #endif /* Blob_hpp */

@@ -6,7 +6,6 @@ const int number_of_targets = 56;
 uniform float time;
 uniform vec2 resolution;
 uniform sampler2DRect tex0; // gibberish text
-// uniform sampler2DRect screen; // still screen
 uniform vec2 targets[number_of_targets];
 
 in vec2 texCoordVarying;
@@ -26,18 +25,6 @@ void main() {
     color += c;
   }
   vec4 text = texture(tex0, texCoordVarying);
-  outputColor = vec4(text.rgb, color.r);
-  // else {
-  //   // swirl mode
-  //   vec4 swirlColor = texture(screen, texCoordVarying);
-  //   float effectRadius = .5;
-  //   float effectAngle = 10. * time * PI;
-  //   vec2 center = vec2(.5);
-  //   vec2 uv = gl_FragCoord.xy / resolution.xy - center;
-  //   float len = length(uv * vec2(resolution.x / resolution.y, 1.));
-  //   float angle = atan(uv.y, uv.x) + effectAngle * smoothstep(effectRadius, 0., len);
-  //   float radius = length(uv);
-  //   // outputColor = swirlColor;
-  //   outputColor = texture(screen, vec2(radius * cos(angle), radius * sin(angle)) + center);
-  // }
+  outputColor = vec4(text.rgb, clamp(color, 0., 0.5));
+  
 }

@@ -41,13 +41,14 @@ void Aura::update() {
     }
     
     if(leaving != -1) {
+        if(triggerColor-5 > 0) triggerColor -= 5;
+        else triggerColor = 255;
         
-    }
-    
-    if(leaving == 0) {
-        if(x > -radius) x -= 5;
-    } else if (leaving == 1) {
-        if(x < ofGetWidth()+radius) x += 5;
+        if(leaving == 0) {
+            if(x > -radius) x -= 5;
+        } else if (leaving == 1) {
+            if(x < ofGetWidth()+radius) x += 5;
+        }
     }
     
     noiseZ = triggered || glowing ? 0.1 : 0.005;
@@ -56,7 +57,7 @@ void Aura::update() {
     path.clear();
     for (int deg = 0; deg < 360; deg += 5) {
         ofPoint noise_point = ofPoint(radius * cos(deg * DEG_TO_RAD) + x, radius * sin(deg * DEG_TO_RAD) + y);
-        float noise_value = ofMap(ofNoise(noise_point.x * noiseXY, noise_point.y * noiseXY, ofGetFrameNum() * noiseZ + id), 0, 1, 0.5, 1); // default: 0.005, noise gaps decreases (controlled by z)
+        float noise_value = ofMap(ofNoise(noise_point.x * noiseXY, noise_point.y * noiseXY, ofGetFrameNum() * noiseZ + id), 0, 1, 0.5, 1.0); // default: 0.005, noise gaps decreases (controlled by z)
         ofPoint circle_point = ofPoint(radius * noise_value * cos(deg * DEG_TO_RAD), radius * noise_value * sin(deg * DEG_TO_RAD));
         if(deg == 0) {
             path.newSubPath();
@@ -71,7 +72,7 @@ void Aura::update() {
 void Aura::draw() {
     ofPushMatrix();
     ofTranslate(x, y);
-    if(triggered || glowing) {
+    if(triggered || glowing || leaving != -1) {
         path.setFilled(true);
         path.setFillColor(ofColor(triggerColor));
     }
@@ -84,11 +85,6 @@ void Aura::draw() {
     path.setStrokeWidth(2);
     path.draw();
     ofPopMatrix();
-}
-
-void Aura::setPos(ofVec2f pos) {
-    x = pos.x;
-    y = pos.y;
 }
 
 ofPoint Aura::make_rect_point(float len, int deg, int z) {
