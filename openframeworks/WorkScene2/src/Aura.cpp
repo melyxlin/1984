@@ -13,6 +13,7 @@ void Aura::setup(int x_, int y_, float r_, int id_) {
     radius = r_;
     id = id_;
     triggered = false;
+    triggeredSlow = false;
     glowing = false;
     disappear = false;
     leaving = -1;
@@ -33,6 +34,21 @@ void Aura::update() {
             triggerTime = -1;
             triggerColor = 0;
         }
+    }
+    
+    if(triggeredSlow) {
+        if(triggerTime == -1) {
+            triggerTime = ofGetFrameNum();
+            triggerColor = 255;
+        } else if (ofGetFrameNum() < triggerTime + 25) {
+            if(triggerColor-1 > 0) triggerColor -= 1;
+            else triggerColor = 0;
+        } else if (ofGetFrameNum() >= triggerTime + 255 ) {
+            triggeredSlow = false;
+            triggerTime = -1;
+            triggerColor = 0;
+        }
+
     }
     
     if(glowing) {
@@ -72,7 +88,7 @@ void Aura::update() {
 void Aura::draw() {
     ofPushMatrix();
     ofTranslate(x, y);
-    if(triggered || glowing || leaving != -1) {
+    if(triggered || glowing || leaving != -1 || triggeredSlow) {
         path.setFilled(true);
         path.setFillColor(ofColor(triggerColor));
     }

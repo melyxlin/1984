@@ -27,6 +27,7 @@ public:
     int y;
     float radius;
     bool triggered;
+    bool triggeredSlow;
     bool glowing;
     bool disappear;
     int leaving;

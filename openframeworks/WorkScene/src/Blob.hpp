@@ -20,6 +20,7 @@ public:
     void init(float xPos, float yPos, bool isLeft);
     void update();
     ofVec2f getPos(int index);
+    void setStart(ofVec2f pos);
     void setEnd(ofVec2f pos);
     void setJitter(float speed, float stepX, float stepY);
     bool isEndOfPath(ofVec2f pos);

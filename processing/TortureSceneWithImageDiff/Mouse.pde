@@ -15,7 +15,11 @@ class Mouse {
   float jitter;
 
   Mouse(int _id) {
-    pos = new PVector(random(10, width-10), random(10, height-10));
+    pos = new PVector(random(0, width), random(0, height));
+    if(pos.x > width/4 && pos.x < width/4*3) {
+      if(pos.y < height/2) pos.y = -10;
+      else pos.y = height+10;
+    }
     vel = PVector.random2D();
     acc = new PVector(0, 0);
     length = random(30, 50);
@@ -37,6 +41,7 @@ class Mouse {
     float dist = pos.dist(attractor);
     if(dist > 200.0) {
       state = 0;
+      //if(dist > width/2*0.9 && dist < width/2) state = 4;
     } else if (dist > 100 && dist <= 200) {
       state = 1; 
     } else if (dist > 20 && dist <= 100) {
@@ -66,7 +71,7 @@ class Mouse {
       jitter = 5;
       steps = 30;
       attractSpeed = map(frameRate, 0, 60, 40, 10);;
-    }
+    } 
     
     //Apply attract/repel force
     pos.add(vel);
@@ -104,26 +109,12 @@ class Mouse {
   
   PVector flee(PVector target) {
    PVector dir = PVector.sub(target, pos);
-   float dist = dir.mag();
-   if(readyMode) {
-     if(dist < width/2) {
-       ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
-       dir.setMag(maxspeed);
-       dir.mult(-1);
-       PVector steer = PVector.sub(dir, vel);
-       steer.limit(maxforce);
-       return steer;
-     } else {
-       return new PVector(0, 0); 
-     }
-   } else {
-     ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
-     dir.setMag(maxspeed);
-     dir.mult(-1);
-     PVector steer = PVector.sub(dir, vel);
-     steer.limit(maxforce);
-     return steer;
-   }
+   ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
+   dir.setMag(maxspeed);
+   dir.mult(-1);
+   PVector steer = PVector.sub(dir, vel);
+   steer.limit(maxforce);
+   return steer;
   }
   
   void setAttractor(PVector attractorPos) {

@@ -26,17 +26,19 @@ float repelLikelihood;
 boolean invert;
 boolean invertMode;
 
-// ready mode variables
-boolean readyMode;
+// start mode variables
+boolean startMode;
 
 void setup() {
-  size(1200, 1080);
-  pixelDensity(2);
+  //size(1200, 1080);
+  fullScreen();
+  //pixelDensity(2);
   frameRate(20);
   background(255);
   fill(0);
   smooth();
   textSize(16);
+  randomSeed(39);
   
   // kinect config
   kinect = new Kinect(this);
@@ -45,7 +47,6 @@ void setup() {
   
   // opencv config
   opencv = new OpenCV(this, kinectWidth, kinectHeight);
-  //opencv.startBackgroundSubtraction(5, 3, 0.5);
   prev = createImage(kinectWidth, kinectHeight, RGB);
   diff = createImage(kinectWidth, kinectHeight, ALPHA);
   trackingMode = false;
@@ -65,7 +66,7 @@ void setup() {
   invertMode = false;
   
   // ready mode config
-  readyMode = true;
+  startMode = false;
 }
 
 void draw() {
@@ -94,25 +95,28 @@ void draw() {
       }
     }
     if(movementSum > 100) repel = true;
+    if(movementSum > 50) println(movementSum);
     diff.updatePixels();
-    text("movementSum: " + movementSum, 20, 40);
+    //text("movementSum: " + movementSum, 20, 40);
   }
   if(repel) {
       if(repelTime == -1) {
         repelTime = millis();
-      } else if (millis() > repelTime + 3000) { // interval 3000ms to not trigger repel again
+      } else if (millis() > repelTime + 1000) { // interval 3000ms to not trigger repel again
         repel = false;
         repelTime = -1;
       }
     }
   
   // mouses update
-  updateMouses();
-  for(Mouse m : mouses) {
-    if(!repel) m.attractBehavior();
-    if(repel && random(1) < repelLikelihood) m.fleeBehavior();
-    m.update();
-    m.display();
+  if(startMode) {
+    updateMouses();
+    for(Mouse m : mouses) {
+      if(!repel) m.attractBehavior();
+      if(repel && random(1) < repelLikelihood) m.fleeBehavior();
+      m.update();
+      m.display();
+    }
   }
   
   // glitch update
@@ -126,9 +130,10 @@ void draw() {
   
   // draw texts
   fill(255, 0, 0);
-  text("numMouse: " + mouses.size(), 20, 60);
-  text("frameRate: " + frameRate, 20, 80);
-  text("repel likelihood: " + repelLikelihood, 20, 100);
+  //text("state: " + mouses.get(0).state, 20, 40);
+  //text("numMouse: " + mouses.size(), 20, 60);
+  //text("frameRate: " + frameRate, 20, 80);
+  //text("repel likelihood: " + repelLikelihood, 20, 100);
 }
 
 void updateMouses() {
@@ -139,32 +144,39 @@ void updateMouses() {
   }
   
   if(mouses.size() < numMouse && !repel) {
-    //if(random(1) < 0.8) mouses.add(new Mouse(mouses.size()));
     mouses.add(new Mouse(mouses.size()));
   }
 }
 
 void keyPressed() {
   if(key == 'i') {
-    // enable trigger mode
+    // enable invert mode
     invertMode = !invertMode;
+    println("invert mode: " + invertMode);
     
   } else if (key == 't') {
     // enable tracking  
     trackingMode = !trackingMode;
+    println("tracking: " + trackingMode);
     
   } else if (key == 'r') { 
-    // ready mode set to false
-    readyMode = false;
+    // reset
+    for(Mouse m : mouses) {
+      m.pos = new PVector(random(0, width), random(0, height));
+      if(m.pos.x > width/4 && m.pos.x < width/4*3) {
+        if(m.pos.y < height/2) m.pos.y = -10;
+        else m.pos.y = height+10;
+      } 
+    }
     
-  } else if (key == BACKSPACE) {
-    // decrease repelLikelihood
-    repelLikelihood -= 0.3;
-    
-  } else if (key == RETURN) {
+  } else if (key == 'p') {
     // trigger
     repel = true;
     
+  } else if (key == 's') {
+    // start mode
+    startMode = !startMode;
+    println("start mode: " + startMode);
   }
 }
 

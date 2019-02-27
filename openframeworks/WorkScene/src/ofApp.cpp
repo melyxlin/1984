@@ -4,6 +4,7 @@
 void ofApp::setup() {
     
     ofSetFrameRate(60);
+    ofSetWindowPosition(-1560, 0);
     ofSetWindowTitle("openframeworks");
     ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ADD);
     
@@ -171,9 +172,11 @@ void ofApp::keyPressed(int key) {
     } else if (key == 's' || key == 'w') {
         swirlOn = true;
         for(int i = 0; i < msgBlobs.size(); i++) {
-            if(key == 'w') msgBlobs[i].swirlCenter = ofVec2f(1100, HEIGHT/5);
             msgBlobs[i].state = 4;
-            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), -100));
+            if(key == 'w') {
+                msgBlobs[i].swirlCenter = ofVec2f(1100, HEIGHT/5);
+                msgBlobs[i].setStart(ofVec2f(1100, HEIGHT/5));
+            }            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), (i < 2 || i > 4) ? HEIGHT/3 : -100));
         }
 
     } else {

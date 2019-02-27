@@ -107,11 +107,15 @@ ofVec2f Blob::getPos(int index) {
         pos.y = y + ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
     } else if (state == 5) {
         // scatter
-        float time = (ofGetFrameNum() - swirlTime - 20) / 5;
+        float time = (ofGetFrameNum() - swirlTime - 20) * 0.05f;
         pos.x = start.x * (1.0 - time) + end.x * time + 2 * ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -xstep, xstep);
         pos.y = start.y * (1.0 - time) + end.y * time + 2 * ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
     }
     return pos;
+}
+
+void Blob::setStart(ofVec2f pos) {
+    start = pos;
 }
 
 void Blob::setEnd(ofVec2f pos) {

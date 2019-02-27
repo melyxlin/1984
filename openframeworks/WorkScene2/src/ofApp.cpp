@@ -4,6 +4,7 @@
 void ofApp::setup() {
     
     ofSetFrameRate(60);
+    ofSetWindowPosition(-1560, 0);
     ofSetWindowTitle("openframeworks");
     ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ADD);
     
@@ -114,6 +115,7 @@ void ofApp::keyPressed(int key) {
             auras[0].triggered = true;
         } else {
             msgBlobs[0].initSlow(actors[0].x > WIDTH/2 ? abs(actors[0].x - WIDTH) : actors[0].x, actors[0].y, actors[0].x > WIDTH/2 ? true : false);
+            auras[0].triggeredSlow = true;
         }
         
     } else if (key == '1') {
@@ -122,6 +124,7 @@ void ofApp::keyPressed(int key) {
             auras[1].triggered = true;
         } else {
             msgBlobs[1].initSlow(actors[1].x > WIDTH/2 ? abs(actors[1].x - WIDTH) : actors[1].x, actors[1].y, actors[1].x > WIDTH/2 ? true : false);
+            auras[1].triggeredSlow = true;
         }
         
     } else if (key == '2') {
@@ -130,6 +133,7 @@ void ofApp::keyPressed(int key) {
             auras[2].triggered = true;
         } else {
             msgBlobs[2].initSlow(actors[2].x > WIDTH/2 ? abs(actors[2].x - WIDTH) : actors[2].x, actors[2].y, actors[2].x > WIDTH/2 ? true : false);
+            auras[2].triggeredSlow = true;
         }
         
     } else if (key == '3') {
@@ -144,6 +148,7 @@ void ofApp::keyPressed(int key) {
             auras[4].triggered = true;
         } else {
             msgBlobs[4].initSlow(actors[4].x > WIDTH/2 ? abs(actors[4].x - WIDTH) : actors[4].x, actors[4].y, actors[4].x > WIDTH/2 ? true : false);
+            auras[4].triggeredSlow = true;
         }
         
     } else if (key == '5') {
@@ -152,6 +157,7 @@ void ofApp::keyPressed(int key) {
             auras[5].triggered = true;
         } else {
             msgBlobs[5].initSlow(actors[5].x > WIDTH/2 ? abs(actors[5].x - WIDTH) : actors[5].x, actors[5].y, actors[5].x > WIDTH/2 ? true : false);
+            auras[5].triggeredSlow = true;
         }
         
     } else if (key == '6') {
@@ -160,6 +166,7 @@ void ofApp::keyPressed(int key) {
             auras[5].triggered = true;
         } else {
             msgBlobs[6].initSlow(actors[6].x > WIDTH/2 ? abs(actors[6].x - WIDTH) : actors[6].x, actors[6].y, actors[6].x > WIDTH/2 ? true : false);
+            auras[5].triggeredSlow = true;
         }
         
     } else if (key == OF_KEY_RETURN) {
@@ -205,7 +212,7 @@ void ofApp::keyPressed(int key) {
         // swirl
         for(int i = 0; i < msgBlobs.size(); i++) {
             msgBlobs[i].state = 4;
-            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), -100));
+            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), (i < 2 || i > 4) ? HEIGHT/3 : -100));
         }
 
     } else if (key == OF_KEY_BACKSPACE) {
