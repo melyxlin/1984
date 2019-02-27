@@ -19,7 +19,7 @@ MonoBehaviour:
   m_StartFrame: 0
   m_EndFrame: 0
   m_StartTime: 0
-  m_EndTime: 200
+  m_EndTime: 120
   m_CapFrameRate: 1
   m_RecorderSettings:
   - {fileID: 2}
@@ -36,14 +36,14 @@ MonoBehaviour:
   m_Name: Movie
   m_EditorClassIdentifier: 
   enabled: 1
-  take: 55
+  take: 59
   captureEveryNthFrame: 1
   fileNameGenerator:
     m_Path:
       m_Root: 0
       m_Leaf: /Recordings/tunnel
       m_ForceAssetFolder: 0
-    m_FileName: tunnel-wall-slow-2
+    m_FileName: tunnel-wall-off
   outputFormat: 0
   videoBitRateMode: 2
   captureAlpha: 0

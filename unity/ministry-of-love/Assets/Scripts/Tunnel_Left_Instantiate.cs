@@ -13,7 +13,7 @@ public class Tunnel_Left_Instantiate : MonoBehaviour
     public float noiseOffset = 0.05f;
     private GameObject[] clones;
     private int w, h;
-    private bool endMode;
+    public bool endMode;
 
 
     void Start()
@@ -53,9 +53,11 @@ public class Tunnel_Left_Instantiate : MonoBehaviour
                 if(clones[index].transform.localPosition.z - camDist < camDepth)
                 {
                     Vector3 scale = clones[index].transform.localScale;
-                    if ( (!endMode && (scale.x < Mathf.PerlinNoise(y * noiseOffset, z * noiseOffset) * 5.0f)) || (endMode && scale.x < 5.0f))
+                    if ( (!endMode && (scale.x < Mathf.PerlinNoise(y * noiseOffset, z * noiseOffset) * 5.0f)) )
                     {
                         clones[index].transform.localScale = new Vector3(scale.x + 0.01f, scale.y, scale.z);
+                    } else if (endMode && scale.x < 5.0f) {
+                        clones[index].transform.localScale = new Vector3(scale.x + 0.02f, scale.y, scale.z);
                     }
                     if(scale.x > 0) clones[index].GetComponent<Renderer>().enabled = true;
                 }

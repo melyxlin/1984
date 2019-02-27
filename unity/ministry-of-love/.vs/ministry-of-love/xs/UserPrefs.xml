@@ -1,5 +1,5 @@
 ﻿<Properties StartupConfiguration="{345621B0-A585-0AB8-C30C-D27AFDF6975D}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Tunnel_Left_Instantiate.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Tunnel_Camera.cs">
     <Files>
       <File FileName="Assets/Scripts/Electrocution_Left.cs" Line="43" Column="10" />
       <File FileName="Assets/Scripts/Electrocution_Center.cs" Line="54" Column="63" />
