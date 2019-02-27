@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "ofxShadertoy.h"
 #include "Blob.hpp"
 #include "Aura.hpp"
 
@@ -11,7 +12,6 @@ public:
     void draw();
     void mousePressed(int x, int y, int button);
     void keyPressed(int key);
-    void keyReleased(int key);
     
     int number_of_targets;
     int num_of_circles_per_target;
@@ -22,8 +22,10 @@ public:
     ofVideoPlayer vid;
     ofTexture vidTexture;
     
-    // swirl operation
-    bool swirlOn;
+    // slow mode variables
+    bool slowMode;
+    bool blobEnlargeMode;
+    float blobRadiusScale;
     
     // aura variables
     ofPoint actors[7];

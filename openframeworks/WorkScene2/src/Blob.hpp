@@ -18,6 +18,7 @@ class Blob {
 public:
     void setup(float xPos, float yPos);
     void init(float xPos, float yPos, bool isLeft);
+    void initSlow(float xPos, float yPos, bool isLeft);
     void update();
     ofVec2f getPos(int index);
     void setEnd(ofVec2f pos);
@@ -30,12 +31,14 @@ public:
     bool dir; // true: going left, false: going right
     float xseed, yseed;
     int numCircles;
-    int state; // 0: idle at start, 1: in motion, 2: interpolating, 3: jittering at end
+    int state; // 0: idle at start, 1: in motion, 2: interpolating, 3: jittering at end, 4: swirl, 5: scatter
     float initTime;
     float interpolationStartTime;
     float interpolationFrameInterval;
+    float swirlTime;
     float jitterSpeed;
     float moveSpeed;
+    float swirlSpeed;
     float indexIncrement;
     float xstep;
     float ystep;

@@ -40,6 +40,11 @@ void ofApp::setup() {
     vid.load("text.mov");
     vid.play();
     vidTexture.allocate(WIDTH, HEIGHT/2, GL_LUMINANCE);
+    
+    // slow mode config
+    slowMode = false;
+    blobEnlargeMode = false;
+    blobRadiusScale = 1.0f;
 }
 //--------------------------------------------------------------
 void ofApp::update() {
@@ -64,6 +69,13 @@ void ofApp::update() {
             this->targets[i*num_of_circles_per_target+j] = glm::vec2(x, y);
         }
     }
+    
+    // slow motion update
+    if(blobEnlargeMode) {
+        if(blobRadiusScale < 5.0f) blobRadiusScale += 0.0025f;
+    } else {
+        blobRadiusScale = 1.0f;
+    }
 }
 
 //--------------------------------------------------------------
@@ -71,6 +83,7 @@ void ofApp::draw() {
     // draw msg blobs for regular shader
     this->shader.begin();
     this->shader.setUniform1f("time", ofGetElapsedTimef());
+    this->shader.setUniform1f("radiusScale", blobRadiusScale);
     this->shader.setUniform2f("resolution", WIDTH, HEIGHT);
     this->shader.setUniformTexture("tex0", vidTexture, 1);
     this->shader.setUniform2fv("targets", &this->targets[0].x, this->number_of_targets);
@@ -84,7 +97,7 @@ void ofApp::draw() {
         auras[i].draw();
     }
 
-    ofDrawBitmapString(ofToString((int)ofGetFrameRate()), WIDTH-20, 20);
+//    ofDrawBitmapString(ofToString((int)ofGetFrameRate()), WIDTH-20, 20);
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
@@ -96,46 +109,68 @@ void ofApp::mousePressed(int x, int y, int button) {
 void ofApp::keyPressed(int key) {
     
     if(key == '0') {
-        msgBlobs[0].init(actors[0].x > WIDTH/2 ? abs(actors[0].x - WIDTH) : actors[0].x, actors[0].y, actors[0].x > WIDTH/2 ? true : false);
-        auras[0].triggered = true;
+        if(!slowMode) {
+            msgBlobs[0].init(actors[0].x > WIDTH/2 ? abs(actors[0].x - WIDTH) : actors[0].x, actors[0].y, actors[0].x > WIDTH/2 ? true : false);
+            auras[0].triggered = true;
+        } else {
+            msgBlobs[0].initSlow(actors[0].x > WIDTH/2 ? abs(actors[0].x - WIDTH) : actors[0].x, actors[0].y, actors[0].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == '1') {
-        msgBlobs[1].init(actors[1].x > WIDTH/2 ? abs(actors[1].x - WIDTH) : actors[1].x, actors[1].y, actors[1].x > WIDTH/2 ? true : false);
-        auras[1].triggered = true;
+        if(!slowMode) {
+            msgBlobs[1].init(actors[1].x > WIDTH/2 ? abs(actors[1].x - WIDTH) : actors[1].x, actors[1].y, actors[1].x > WIDTH/2 ? true : false);
+            auras[1].triggered = true;
+        } else {
+            msgBlobs[1].initSlow(actors[1].x > WIDTH/2 ? abs(actors[1].x - WIDTH) : actors[1].x, actors[1].y, actors[1].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == '2') {
-        msgBlobs[2].init(actors[2].x > WIDTH/2 ? abs(actors[2].x - WIDTH) : actors[2].x, actors[2].y, actors[2].x > WIDTH/2 ? true : false);
-        auras[2].triggered = true;
+        if(!slowMode) {
+            msgBlobs[2].init(actors[2].x > WIDTH/2 ? abs(actors[2].x - WIDTH) : actors[2].x, actors[2].y, actors[2].x > WIDTH/2 ? true : false);
+            auras[2].triggered = true;
+        } else {
+            msgBlobs[2].initSlow(actors[2].x > WIDTH/2 ? abs(actors[2].x - WIDTH) : actors[2].x, actors[2].y, actors[2].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == '3') {
-        msgBlobs[3].init(actors[3].x > WIDTH/2 ? abs(actors[3].x - WIDTH) : actors[3].x, actors[3].y, actors[3].x > WIDTH/2 ? true : false);
-        auras[3].triggered = true;
+        if(!slowMode) {
+            msgBlobs[3].init(actors[3].x > WIDTH/2 ? abs(actors[3].x - WIDTH) : actors[3].x, actors[3].y, actors[3].x > WIDTH/2 ? true : false);
+            auras[3].triggered = true;
+        } 
         
     } else if (key == '4') {
-        msgBlobs[4].init(actors[4].x > WIDTH/2 ? abs(actors[4].x - WIDTH) : actors[4].x, actors[4].y, actors[4].x > WIDTH/2 ? true : false);
-        auras[4].triggered = true;
+        if(!slowMode) {
+            msgBlobs[4].init(actors[4].x > WIDTH/2 ? abs(actors[4].x - WIDTH) : actors[4].x, actors[4].y, actors[4].x > WIDTH/2 ? true : false);
+            auras[4].triggered = true;
+        } else {
+            msgBlobs[4].initSlow(actors[4].x > WIDTH/2 ? abs(actors[4].x - WIDTH) : actors[4].x, actors[4].y, actors[4].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == '5') {
-        msgBlobs[5].init(actors[5].x > WIDTH/2 ? abs(actors[5].x - WIDTH) : actors[5].x, actors[5].y, actors[5].x > WIDTH/2 ? true : false);
-        auras[5].triggered = true;
+        if(!slowMode) {
+            msgBlobs[5].init(actors[5].x > WIDTH/2 ? abs(actors[5].x - WIDTH) : actors[5].x, actors[5].y, actors[5].x > WIDTH/2 ? true : false);
+            auras[5].triggered = true;
+        } else {
+            msgBlobs[5].initSlow(actors[5].x > WIDTH/2 ? abs(actors[5].x - WIDTH) : actors[5].x, actors[5].y, actors[5].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == '6') {
-        msgBlobs[6].init(actors[6].x > WIDTH/2 ? abs(actors[6].x - WIDTH) : actors[6].x, actors[6].y, actors[6].x > WIDTH/2 ? true : false);
-        auras[5].triggered = true;
+        if(!slowMode) {
+            msgBlobs[6].init(actors[6].x > WIDTH/2 ? abs(actors[6].x - WIDTH) : actors[6].x, actors[6].y, actors[6].x > WIDTH/2 ? true : false);
+            auras[5].triggered = true;
+        } else {
+            msgBlobs[6].initSlow(actors[6].x > WIDTH/2 ? abs(actors[6].x - WIDTH) : actors[6].x, actors[6].y, actors[6].x > WIDTH/2 ? true : false);
+        }
         
     } else if (key == OF_KEY_RETURN) {
         // goes to frame with news article
         vid.setPosition(0.32);
         vid.play();
         
-    } else if (key == OF_KEY_BACKSPACE) {
-        // at shutter click
-        auras[0].glowing = true;
-        auras[1].glowing = true;
-        auras[2].glowing = true;
-        auras[3].glowing = true;
-        auras[4].glowing = true;
-        auras[5].glowing = true;
+    } else if (key == OF_KEY_SHIFT) {
+        for(int i = 0; i < numAuras; i++) {
+            auras[i].leaving = 2;
+        }
         
     } else if (key == OF_KEY_LEFT) {
         // auras[0-2] on left leave
@@ -149,9 +184,12 @@ void ofApp::keyPressed(int key) {
             auras[i].leaving = 1;
         }
         
-    } else if(key == 'r') {
+    } else if (key == 'r') {
         // reset
         msgIter = 0;
+        slowMode = false;
+        blobRadiusScale = 1.0f;
+        blobEnlargeMode = false;
         for(int i = 0; i < msgBlobs.size(); i++) {
             msgBlobs[i].setup(actors[i].x, actors[i].y);
         }
@@ -164,9 +202,19 @@ void ofApp::keyPressed(int key) {
         ofToggleFullscreen();
         
     } else if (key == 's') {
-        
-        swirlOn = true;
+        // swirl
+        for(int i = 0; i < msgBlobs.size(); i++) {
+            msgBlobs[i].state = 4;
+            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), -100));
+        }
 
+    } else if (key == OF_KEY_BACKSPACE) {
+        // slow motion
+        slowMode = !slowMode;
+        
+    } else if (key == OF_KEY_COMMAND) {
+        blobEnlargeMode = !blobEnlargeMode;
+        
     } else {
         // add and init blob
 //        if(msgIter < number_of_targets/num_of_circles_per_target) {
@@ -180,11 +228,5 @@ void ofApp::keyPressed(int key) {
 //            msgIter = 0;
 //        }
         
-    }
-}
-
-void ofApp::keyReleased(int key) {
-    if(key == 's') {
-        swirlOn = false;
     }
 }

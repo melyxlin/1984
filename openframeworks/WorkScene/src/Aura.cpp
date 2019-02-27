@@ -45,7 +45,7 @@ void Aura::update() {
     path.clear();
     for (int deg = 0; deg < 360; deg += 5) {
         ofPoint noise_point = ofPoint(radius * cos(deg * DEG_TO_RAD) + x, radius * sin(deg * DEG_TO_RAD) + y);
-        float noise_value = ofMap(ofNoise(noise_point.x * noiseXY, noise_point.y * noiseXY, ofGetFrameNum() * noiseZ + id), 0, 1, 0.5, 1); // default: 0.005, noise gaps decreases (controlled by z)
+        float noise_value = ofMap(ofNoise(noise_point.x * noiseXY, noise_point.y * noiseXY, ofGetFrameNum() * noiseZ + id), 0, 1, 0.5, 1.0); // default: 0.005, noise gaps decreases (controlled by z)
         ofPoint circle_point = ofPoint(radius * noise_value * cos(deg * DEG_TO_RAD), radius * noise_value * sin(deg * DEG_TO_RAD));
         if(deg == 0) {
             path.newSubPath();
