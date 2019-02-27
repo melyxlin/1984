@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxShadertoy.h"
 #include "Blob.hpp"
 #include "Aura.hpp"
 

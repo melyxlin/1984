@@ -212,7 +212,8 @@ void ofApp::keyPressed(int key) {
         // swirl
         for(int i = 0; i < msgBlobs.size(); i++) {
             msgBlobs[i].state = 4;
-            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), (i < 2 || i > 4) ? HEIGHT/3 : -100));
+            msgBlobs[i].setEnd(ofVec2f(ofMap(i, 0, msgBlobs.size(), -100, WIDTH+100), i < 3 ? ofMap(i, 0, 2, HEIGHT/3, -100) : ofMap(i, 3, 6, -100, HEIGHT/3)));
+            msgBlobs[i].setJitter(0.05, 30, 10);
         }
 
     } else if (key == OF_KEY_BACKSPACE) {

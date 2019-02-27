@@ -54,8 +54,7 @@ void Blob::update() {
         if(swirlTime == -1) swirlTime = ofGetFrameNum();
         else if(ofGetFrameNum() > swirlTime + 20) state = 5;
     } else if( state == 5 ){
-        start.x = WIDTH/2;
-        start.y = HEIGHT/6;
+        start = swirlCenter;
     } else if (state == 5 && isEndOfPath(getPos(0))) {
         state = 0;
     }
@@ -107,7 +106,7 @@ ofVec2f Blob::getPos(int index) {
         pos.y = y + ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
     } else if (state == 5) {
         // scatter
-        float time = (ofGetFrameNum() - swirlTime - 20) * 0.05f;
+        float time = (ofGetFrameNum() - swirlTime - 20 - index * indexIncrement * 0.1) * 0.05f;
         pos.x = start.x * (1.0 - time) + end.x * time + 2 * ofMap(ofNoise(xseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -xstep, xstep);
         pos.y = start.y * (1.0 - time) + end.y * time + 2 * ofMap(ofNoise(yseed, jitterSpeed*(ofGetFrameNum() - index*1)), 0, 1, -ystep, ystep);
     }
