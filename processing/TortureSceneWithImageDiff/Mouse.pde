@@ -104,12 +104,26 @@ class Mouse {
   
   PVector flee(PVector target) {
    PVector dir = PVector.sub(target, pos);
-   ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
-   dir.setMag(maxspeed);
-   dir.mult(-1);
-   PVector steer = PVector.sub(dir, vel);
-   steer.limit(maxforce);
-   return steer;
+   float dist = dir.mag();
+   if(readyMode) {
+     if(dist < width/2) {
+       ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
+       dir.setMag(maxspeed);
+       dir.mult(-1);
+       PVector steer = PVector.sub(dir, vel);
+       steer.limit(maxforce);
+       return steer;
+     } else {
+       return new PVector(0, 0); 
+     }
+   } else {
+     ang = dir.heading() + HALF_PI + map(noise(t), 0.0, 1.0, -jitter, jitter);
+     dir.setMag(maxspeed);
+     dir.mult(-1);
+     PVector steer = PVector.sub(dir, vel);
+     steer.limit(maxforce);
+     return steer;
+   }
   }
   
   void setAttractor(PVector attractorPos) {

@@ -26,6 +26,9 @@ float repelLikelihood;
 boolean invert;
 boolean invertMode;
 
+// ready mode variables
+boolean readyMode;
+
 void setup() {
   size(1200, 1080);
   pixelDensity(2);
@@ -60,6 +63,9 @@ void setup() {
   // glitch config
   invert = false;
   invertMode = false;
+  
+  // ready mode config
+  readyMode = true;
 }
 
 void draw() {
@@ -94,7 +100,7 @@ void draw() {
   if(repel) {
       if(repelTime == -1) {
         repelTime = millis();
-      } else if (millis() > repelTime + 3000) { // interval to not trigger repel again
+      } else if (millis() > repelTime + 3000) { // interval 3000ms to not trigger repel again
         repel = false;
         repelTime = -1;
       }
@@ -147,9 +153,18 @@ void keyPressed() {
     // enable tracking  
     trackingMode = !trackingMode;
     
-  } else if (key == 'd') {
+  } else if (key == 'r') { 
+    // ready mode set to false
+    readyMode = false;
+    
+  } else if (key == BACKSPACE) {
     // decrease repelLikelihood
     repelLikelihood -= 0.3;
+    
+  } else if (key == RETURN) {
+    // trigger
+    repel = true;
+    
   }
 }
 
