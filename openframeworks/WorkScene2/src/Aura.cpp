@@ -40,7 +40,7 @@ void Aura::update() {
         if(triggerTime == -1) {
             triggerTime = ofGetFrameNum();
             triggerColor = 255;
-        } else if (ofGetFrameNum() < triggerTime + 25) {
+        } else if (ofGetFrameNum() < triggerTime + 255) {
             if(triggerColor-1 > 0) triggerColor -= 1;
             else triggerColor = 0;
         } else if (ofGetFrameNum() >= triggerTime + 255 ) {
