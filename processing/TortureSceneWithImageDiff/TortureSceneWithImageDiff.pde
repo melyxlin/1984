@@ -1,4 +1,4 @@
-import org.openkinect.freenect.*;
+\import org.openkinect.freenect.*;
 import org.openkinect.freenect2.*;
 import org.openkinect.processing.*;
 import org.openkinect.tests.*;
@@ -164,8 +164,8 @@ void keyPressed() {
     for(Mouse m : mouses) {
       m.pos = new PVector(random(0, width), random(0, height));
       if(m.pos.x > width/4 && m.pos.x < width/4*3) {
-        if(m.pos.y < height/2) m.pos.y = -10;
-        else m.pos.y = height+10;
+        if(m.pos.y < height/2) m.pos.y = -100;
+        else m.pos.y = height+100;
       } 
     }
     
