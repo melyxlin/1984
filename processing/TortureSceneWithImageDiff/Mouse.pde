@@ -17,8 +17,8 @@ class Mouse {
   Mouse(int _id) {
     pos = new PVector(random(0, width), random(0, height));
     if(pos.x > width/4 && pos.x < width/4*3) {
-      if(pos.y < height/2) pos.y = -10;
-      else pos.y = height+10;
+      if(pos.y < height/2) pos.y = -100;
+      else pos.y = height+100;
     }
     vel = PVector.random2D();
     acc = new PVector(0, 0);
@@ -44,7 +44,7 @@ class Mouse {
       //if(dist > width/2*0.9 && dist < width/2) state = 4;
     } else if (dist > 100 && dist <= 200) {
       state = 1; 
-    } else if (dist > 20 && dist <= 100) {
+    } else if (dist > 80 && dist <= 100) {
       state = 2; 
     } else {
       state = 3; 
@@ -55,22 +55,22 @@ class Mouse {
       length = random(30, 50);
       jitter = 0.5;
       steps = 0;
-      attractSpeed = map(frameRate, 0, 60, 20, 3);
+      attractSpeed = map(frameRate, 0, 60, 12, 3);
     } else if (state == 1) {
       length = 50;
       jitter = 0.5;
       steps = 5;
-      attractSpeed = map(frameRate, 0, 60, 24, 4);
+      attractSpeed = map(frameRate, 0, 60, 20, 4);
     } else if (state == 2) {
       length = 60;
       jitter = 0.5;
       steps = 20;
-      attractSpeed = map(frameRate, 0, 60, 30, 7);
+      attractSpeed = map(frameRate, 0, 60, 40, 20);
     } else if (state == 3) {
       length = 80;
       jitter = 5;
       steps = 30;
-      attractSpeed = map(frameRate, 0, 60, 40, 10);;
+      attractSpeed = map(frameRate, 0, 60, 40, 10);
     } 
     
     //Apply attract/repel force
@@ -84,12 +84,13 @@ class Mouse {
   void attractBehavior() {
     PVector attract = attract(attractor);
     attract.mult(30); // CHANGE HERE FOR RATS ATTRACT SPEED
+    if(state == 2) attract.mult(4);
     applyForce(attract);
   }
   
   void fleeBehavior() {
     PVector flee = flee(attractor);
-    flee.mult(400); // CHANGE HERE FOR RATS REPEL SPEED
+    flee.mult(600); // CHANGE HERE FOR RATS REPEL SPEED
     applyForce(flee);
   }
   
